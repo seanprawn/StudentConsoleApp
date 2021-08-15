@@ -9,6 +9,9 @@
  * Components in this app
  * (Options that are available at to the user)
  */
+
+$spaces;
+
 $availableOptions = array(
     "add",
     "edit   --id=<id_number> (numbers only!)",
@@ -72,6 +75,52 @@ function runHelp()
         echo "-----------------------------------------------------\n";
     }
     echo "----------------------------------------------------------------------------------------\n\n";
+}
+
+function printStudentDetails($student)
+{
+    $offset =1;
+    global $spaces;
+    $spaces = 20;
+        echo "|".$student->id;
+        createSpaces($spaces -strlen($student->id)-$offset);
+        echo "|".$student->name;
+        createSpaces($spaces - strlen($student->name)- $offset);
+        echo "|".$student->surname;
+        createSpaces($spaces - strlen($student->surname)-$offset);
+        echo "|".$student->age;
+        createSpaces($spaces - strlen($student->age)-$offset);
+        echo "|".$student->curriculum;
+        echo "\n----------------------------------------------------------------------------------------------------------------\n";
+}
+
+function printLables()
+{
+    $idLbl = "|id";
+    $nameLbl = "|Name";
+    $sNameLbl = "|Surname";
+    $ageLbl = "|Age";
+    $curriclmLbl = "|Curriculum";
+    global $spaces;
+    $spaces = 20;
+    echo "----------------------------------------------------------------------------------------------------------------\n";
+    echo $idLbl;
+    createSpaces($spaces-strlen($idLbl));
+    echo $nameLbl;
+    createSpaces($spaces-strlen($nameLbl));
+    echo $sNameLbl;
+    createSpaces($spaces-strlen($sNameLbl));
+    echo $ageLbl;
+    createSpaces($spaces-strlen($ageLbl));
+    echo $curriclmLbl;
+    echo "\n----------------------------------------------------------------------------------------------------------------\n";
+}
+function createSpaces($spaces)
+{
+    for($i=$spaces;$i>0;$i--)
+    {
+        echo " ";
+    }
 }
 
 ?>

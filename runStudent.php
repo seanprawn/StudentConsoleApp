@@ -27,15 +27,41 @@ if(isset($options["action"]))
         echo "Ok Lets add a student! \n";
         startAddComp();
     }
-    else if($options["action"] == "edit" && isset($options["id"]) && validateInputId($options["id"]))
+    else if($options["action"] == "edit" && isset($options["id"]))
     {
-        echo "Ok Lets edit this student: ID=".$searchId."\n";
-        editExistingStudent();
+
+        $searchId = $options["id"];
+        if(validateInputId($searchId))
+        {
+            echo "Ok Lets edit this student: ID=".$searchId."\n";
+            $searchId = trim($searchId);
+            // searchForId($searchId);
+            editExistingStudent($searchId);
+        }else
+        {
+            echo "Invalid id. $searchId is incorrect. Please try again.\n";
+        }
     }
-    else if($options["action"] == "delete" && isset($options["id"]) && validateInputId($options["id"]))
+    else if($options["action"] == "delete" && isset($options["id"]))
     {
-        echo "Delete this student: ID=".$searchId."\n";
-        deleteExistingStudent();
+
+        $searchId = $options["id"];
+        if(validateInputId($searchId))
+        {
+            echo "Delete this student: ID=".$searchId."\n";
+            $searchId = trim($searchId);
+
+            $delete = searchIdAndDeleteStudent($searchId);
+            if($delete)
+            {
+                echo "File Deleted successfully";
+            }
+
+        }else
+        {
+            echo "Invalid id. $searchId is incorrect. Please try again.\n";
+        }
+
     }
     else if($options["action"] == "search" && isset($options["id"]))
     {
@@ -68,40 +94,6 @@ else
     echo "Incorrect argument, please try again. \nor use --help to see available actions.\n";
 }
 
-
-
-// function addNewStudent()
-// {
-//     // Runs the Add component. 
-//     // Each function in the add component calls the next function (only if validated)
-//     startAddComp();
-
-// }
-
-// function searchStudent($studentID)
-// {
-//     searchForId($studentID);
-//     // getDirectories($studentID);
-// }
-
-// $id = generateRandomId();
-// $s2 = new Student($id, "John", "Smith", 46, "Food");
-// $s2->getInfo();
-// echo "Are you sure you want to do this?  Type 'yes' to continue: ";
-// $input = fgets(STDIN); //trim whitespace to avoid errors
-// // $handle = fopen ("php://stdin","r");
-// // $line = fgets($handle);
-// if(trim($input) != 'yes'){
-//     echo "ABORTING!\n";
-//     exit;
-// }
-// fclose($handle);
-// fclose($input);
-
-// echo "\n";
-// echo "Thank you, continuing...\n";
-
-
 /*TODO
 - Prompt user for input - Done!
 - Validate inputs - Done!
@@ -112,9 +104,15 @@ else
 - Unique ids - Done!
 - perform actions:
 -   Save student to json file in folder structure with subdir starting with first two digits - done!
--   edit student based on id as arg
--   delete student based on id as arg
+-   edit student based on id as arg - Done!
+-   delete student based on id as arg - Done!
 -   Search for student - Done!
 -   Search for all students if arg is left blank - Done!
+
+----BUGS:
+---Edit student saving blank records
+---Search all produces duplicates
+---Delete folders? (non essential but annoying)
+---
 */
 ?>

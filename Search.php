@@ -6,8 +6,8 @@
  * - Search for existing Student using unique id
  * -Search that returns all students saved
  */
-    $studentFolders;
-    $spaces;
+    // $studentFolders;
+
     /**
      * Searches for a student with given id
      * Prints out the student if found
@@ -53,7 +53,7 @@
     {
         $dir = 'students';
         $exclude = array( ".",".."); // Clean up the array by deleting elements not needed.
-        global $studentFolders;
+        // global $studentFolders;
         $studentFolders = array();
         if(is_dir($dir))
         {
@@ -100,8 +100,85 @@
         }
     }
 
+    function searchIdAndReturnStudent($id)
+    {
+        $searchFolder = substr($id,0,-5);
+        $dirs = getDirectories();
+        if($dirs)
+        {
+            foreach($dirs as $folder)
+            {
+                if($folder === $searchFolder)
+                {
+                    $path = "students/".$searchFolder."/".$id.".json";
+                    if(file_exists($path))
+                    {
+                        $file = file($path);
+                        
+                        if($file)
+                        {
+                            $student = json_decode($file[0],false);
+                            return $student;
+                        }
+                        else 
+                        {
+                            echo "Error - Student record not found\n";
+                        }
+                    }
+                    else 
+                    {
+                        echo "Error - Student record not found\n";
+                    }
+                }
+            }
+        }
+        else
+        {
+            echo "Error - Student record not found\n";
+        }
+    }
+
+    function searchIdAndDeleteStudent($id)
+    {
+        $searchFolder = substr($id,0,-5);
+        $dirs = getDirectories();
+        if($dirs)
+        {
+            foreach($dirs as $folder)
+            {
+                if($folder === $searchFolder)
+                {
+                    $path = "students/".$searchFolder."/".$id.".json";
+                    // if(file_exists($path))
+                    // {
+                        // $file = file($path);
+                        
+                        if (is_file($path))
+                        {
+                          unlink($path);
+                          return true;
+                        }
+                        else 
+                        {
+                            echo "Error - Student record not found\n";
+                        }
+                    // }
+                    // else 
+                    // {
+                    //     echo "Error - Student record not found\n";
+                    // }
+                }
+            }
+        }
+        else
+        {
+            echo "Error - Student record not found\n";
+        }
+    }
+
     function searchAllStudents()
     {
+        // $dirs = null;
         $dirs = getDirectories();
         $allStudents = array();
         $exclude = array( ".",".."); // Clean up the array by deleting elements not needed.
@@ -154,50 +231,6 @@
         }
     }
 
-    function printStudentDetails($student)
-    {
-        $offset =1;
-        global $spaces;
-        $spaces = 20;
-            echo "|".$student->id;
-            createSpaces($spaces -strlen($student->id)-$offset);
-            echo "|".$student->name;
-            createSpaces($spaces - strlen($student->name)- $offset);
-            echo "|".$student->surname;
-            createSpaces($spaces - strlen($student->surname)-$offset);
-            echo "|".$student->age;
-            createSpaces($spaces - strlen($student->age)-$offset);
-            echo "|".$student->curriculum;
-            echo "\n----------------------------------------------------------------------------------------------------------------\n";
-    }
 
-    function printLables()
-    {
-        $idLbl = "|id";
-        $nameLbl = "|Name";
-        $sNameLbl = "|Surname";
-        $ageLbl = "|Age";
-        $curriclmLbl = "|Curriculum";
-        global $spaces;
-        $spaces = 20;
-        echo "----------------------------------------------------------------------------------------------------------------\n";
-        echo $idLbl;
-        createSpaces($spaces-strlen($idLbl));
-        echo $nameLbl;
-        createSpaces($spaces-strlen($nameLbl));
-        echo $sNameLbl;
-        createSpaces($spaces-strlen($sNameLbl));
-        echo $ageLbl;
-        createSpaces($spaces-strlen($ageLbl));
-        echo $curriclmLbl;
-        echo "\n----------------------------------------------------------------------------------------------------------------\n";
-    }
-    function createSpaces($spaces)
-    {
-        for($i=$spaces;$i>0;$i--)
-        {
-            echo " ";
-        }
-    }
 ?>
 
