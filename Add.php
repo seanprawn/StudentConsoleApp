@@ -1,4 +1,5 @@
 <?php
+// include 'Util.php';
 // Global Variables for Adding a new student 
 $inputId;
 $inputName;
@@ -14,11 +15,43 @@ function startAddComp()
 
 function addNewId()
 {
-    echo "Enter id: ";
+
+    echo "Enter id: Would you like to auto generate an id? \n(reply 'y' for yes or 'n' for no )\n";
+    $inputAnswer = fgets(STDIN);
+    $inputAnswer = trim($inputAnswer);
+    if($inputAnswer == "y" || $inputAnswer === "yes")
+    {
+        autoGenerateId();
+    }elseif($inputAnswer ==="n" || $inputAnswer === "no")
+    {
+        manuallyEnterId();
+    }
+    else{
+        echo "Something went wrong, please manually enter the id\n ";
+        manuallyEnterId();
+    }
+
+    // echo "Enter id: ";
+    // $inputId = fgets(STDIN);
+    // $inputId = trim($inputId);
+
+
+}
+
+function autoGenerateId()
+{
+    global $inputId;
+    $inputId = generateRandomId();
+    echo "Random id has been generated: ".$inputId."\n";
+    addNewName();
+}
+
+function manuallyEnterId()
+{
     global $inputId; 
+    echo "Enter id: ";
     $inputId = fgets(STDIN);
     $inputId = trim($inputId);
-
     if (is_numeric($inputId))
     {
     if (strlen($inputId) === 7)
@@ -27,14 +60,14 @@ function addNewId()
         }
         else{
             echo "Please enter a 7 digit number!\n";
-            addNewId();
+            manuallyEnterId();
         }
     
     }
     else
     {
         echo "This not a number. Please enter a number only.\n";
-        addNewId();
+        manuallyEnterId();
     }
 }
 
@@ -106,22 +139,6 @@ function addNewCurriculum()
         echo "Invalid input, please try again.\n";
         addNewCurriculum();
     }
-}
-
-function validateTextInput($input)
-{
-    if (!preg_match("/^[a-zA-Z-' ]*$/",$input))
-    {
-       return false;
-    }
-    else return true;
-}
-
-function testInput($data)
-{
-  $data = trim($data);
-  $data = stripslashes($data);
-  return $data;
 }
 
 function saveStudentDetails()

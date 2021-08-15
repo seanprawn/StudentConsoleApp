@@ -4,14 +4,18 @@ include 'Add.php';
 include 'Edit.php';
 include 'Delete.php';
 include 'Search.php';
+include 'Util.php';
 
-
-$availableOptions = array(
-    "add",
-    "edit",
-    "delete",
-    "search",
-);
+/**
+ * This app is modularised. 
+ * This component acts as a controller and makes calls to the other components as neccessary(Depending on user input).
+ */
+// $availableOptions = array(
+//     "add",
+//     "edit   --id=<id_number> (numbers only!)",
+//     "delete --id=<id_number> (numbers only!)",
+//     "search [--action=<action_name>] (*optional)",
+// );
 
 $shortOpts  = "";
 $longOpts  = array(
@@ -27,61 +31,65 @@ if(isset($options["action"]))
     if($options["action"] == "add")
     {
         echo "Ok Lets add a student! \n";
-        addNewStudent();
+        startAddComp();
+        // addNewStudent();
     }
-    else if($options["action"] == "edit")
+    else if($options["action"] == "edit" && isset($options["id"]) && validateInputId($options["id"]))
     {
-        echo "Ok Lets edit this student! \n";
+        echo "Ok Lets edit this student: ID=".$searchId."\n";
         editExistingStudent();
     }
-    else if($options["action"] == "delete")
+    else if($options["action"] == "delete" && isset($options["id"]) && validateInputId($options["id"]))
     {
-        echo "Delete this student \n";
+        echo "Delete this student: ID=".$searchId."\n";
         deleteExistingStudent();
+    }
+    else if($options["action"] == "search" && isset($options["id"]))
+    {
+        $searchId = $options["id"];
+        if(validateInputId($searchId))
+        {
+            echo "Search for this student: ID=".$searchId." \n";
+            $searchId = trim($searchId);
+            searchForId($searchId);
+        }else
+        {
+            echo "Invalid id. $searchId is incorrect. Please try again.\n";
+        }
     }
     else if($options["action"] == "search")
     {
-        echo "Search for this student \n";
-        searchStudent();
-    }else
+        searchAllStudents();
+    }
+    else
     {
         echo "Incorrect argument, please try again.\nor use --help to see available actions.\n";
     }
 }
 else if(isset($options["help"]))
 {
-    echo "\n\n----------------------------------------------------------------------------------------\n";
-    echo "Help: Available actions\n";
-    echo "----------------------------------------------------------------------------------------\n";
-    echo "Please run the program with one of the following arguments:\n";
-    foreach($availableOptions as $option)
-    {
-        echo "--action=".$option."\n";
-    }
+    runHelp();
 }
 else
 {
     echo "Incorrect argument, please try again. \nor use --help to see available actions.\n";
 }
 
-function addNewStudent()
-{
-    // Runs the Add component. 
-    // Each function in the add component calls the next function (only if validated)
-    startAddComp();
 
-}
 
-function generateRandomId()
-{
-    $seven_digit_random_number = random_int(1000000, 9999999);
-    return $seven_digit_random_number;
-}
+// function addNewStudent()
+// {
+//     // Runs the Add component. 
+//     // Each function in the add component calls the next function (only if validated)
+//     startAddComp();
 
-function searchStudent()
-{
+// }
 
-}
+// function searchStudent($studentID)
+// {
+//     searchForId($studentID);
+//     // getDirectories($studentID);
+// }
 
 // $id = generateRandomId();
 // $s2 = new Student($id, "John", "Smith", 46, "Food");
@@ -106,7 +114,7 @@ function searchStudent()
 - Validate inputs - Done!
 - Validate unique id?
 - Format inputs as human readable - done!
-- Get actions from args  - 
+- Get actions from args  - Done!
 - Validate input args - Done!
 - Unique ids - 
 - perform actions:
@@ -114,5 +122,6 @@ function searchStudent()
 -   edit student based on id as arg
 -   delete student based on id as arg
 -   Search for student
+-   Search for all students if arg is left blank
 */
 ?>
