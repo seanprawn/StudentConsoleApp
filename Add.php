@@ -30,20 +30,26 @@ function addNewId()
         echo "Something went wrong, please manually enter the id\n ";
         manuallyEnterId();
     }
-
-    // echo "Enter id: ";
-    // $inputId = fgets(STDIN);
-    // $inputId = trim($inputId);
-
-
 }
 
 function autoGenerateId()
 {
     global $inputId;
     $inputId = generateRandomId();
+    $inputId = trim($inputId);
     echo "Random id has been generated: ".$inputId."\n";
-    addNewName();
+    if(seacrchForExistingId($inputId))
+    {
+        // echo "Search for this student: ID=".$searchId." \n";
+        // $searchId = trim($searchId);
+        // searchForId($inputId);
+        echo "Invalid id. $inputId is not unique. Please try again.\n";
+        autoGenerateId();
+    }else
+    {
+        addNewName();
+
+    }
 }
 
 function manuallyEnterId()
@@ -54,15 +60,24 @@ function manuallyEnterId()
     $inputId = trim($inputId);
     if (is_numeric($inputId))
     {
-    if (strlen($inputId) === 7)
+        if (strlen($inputId) === 7)
         {
-            addNewName();
+            if(seacrchForExistingId($inputId))
+            {
+                echo "Invalid id. $inputId is not unique. Please try again.\n";
+                manuallyEnterId();
+            }else
+            {
+                addNewName();
+        
+            }
+            // addNewName();
         }
-        else{
+        else
+        {
             echo "Please enter a 7 digit number!\n";
             manuallyEnterId();
         }
-    
     }
     else
     {
@@ -76,7 +91,7 @@ function addNewName()
     echo "Enter name: ";
     global $inputName;
     $inputName = fgets(STDIN);
-    $inputName = testInput($inputName);
+    $inputName = cleanInput($inputName);
 
     if(validateTextInput($inputName))
     {
@@ -94,7 +109,7 @@ function addNewSurname()
     echo "Enter Surname: ";
     global $inputSurname;
     $inputSurname = fgets(STDIN);
-    $inputSurname = testInput($inputSurname);
+    $inputSurname = cleanInput($inputSurname);
 
     if(validateTextInput($inputSurname))
     {
@@ -114,9 +129,17 @@ function addNewAge()
     $inputAge = fgets(STDIN);
     $inputAge = trim($inputAge);
 
-    if(is_numeric($inputAge))
+    if(is_numeric($inputAge)) // validate age - will a student be older than 100? 
     {
-        addNewCurriculum();
+        if($inputAge < 100)
+        {
+            addNewCurriculum();
+        }
+        else
+        {
+            echo "Please enter a valid age\n";
+            addNewAge();
+        }
     }else
     {
         echo "Invalid input, please try again.\n";
@@ -129,7 +152,7 @@ function addNewCurriculum()
     echo "Enter Curriculum: ";
     global $inputCurriculum;
     $inputCurriculum = fgets(STDIN);
-    $inputCurriculum = testInput($inputCurriculum);
+    $inputCurriculum = cleanInput($inputCurriculum);
 
     if(validateTextInput($inputCurriculum))
     {

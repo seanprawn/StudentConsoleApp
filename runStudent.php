@@ -10,12 +10,6 @@ include 'Util.php';
  * This app is modularised. 
  * This component acts as a controller and makes calls to the other components as neccessary(Depending on user input).
  */
-// $availableOptions = array(
-//     "add",
-//     "edit   --id=<id_number> (numbers only!)",
-//     "delete --id=<id_number> (numbers only!)",
-//     "search [--action=<action_name>] (*optional)",
-// );
 
 $shortOpts  = "";
 $longOpts  = array(
@@ -32,7 +26,6 @@ if(isset($options["action"]))
     {
         echo "Ok Lets add a student! \n";
         startAddComp();
-        // addNewStudent();
     }
     else if($options["action"] == "edit" && isset($options["id"]) && validateInputId($options["id"]))
     {
@@ -112,16 +105,16 @@ else
 /*TODO
 - Prompt user for input - Done!
 - Validate inputs - Done!
-- Validate unique id?
+- Validate unique id? - Done!
 - Format inputs as human readable - done!
 - Get actions from args  - Done!
 - Validate input args - Done!
-- Unique ids - 
+- Unique ids - Done!
 - perform actions:
 -   Save student to json file in folder structure with subdir starting with first two digits - done!
 -   edit student based on id as arg
 -   delete student based on id as arg
--   Search for student
--   Search for all students if arg is left blank
+-   Search for student - Done!
+-   Search for all students if arg is left blank - Done!
 */
 ?>
