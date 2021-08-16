@@ -21,7 +21,6 @@ class Student {
     }
 
       // Methods
-
   public function set_id($id) {
    $this->name = $name;
   }
