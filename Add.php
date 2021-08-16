@@ -1,5 +1,4 @@
 <?php
-// include 'Util.php';
 // Global Variables for Adding a new student 
 $inputId;
 $inputName;
@@ -40,9 +39,6 @@ function autoGenerateId()
     echo "Random id has been generated: ".$inputId."\n";
     if(seacrchForExistingId($inputId))
     {
-        // echo "Search for this student: ID=".$searchId." \n";
-        // $searchId = trim($searchId);
-        // searchForId($inputId);
         echo "Invalid id. $inputId is not unique. Please try again.\n";
         autoGenerateId();
     }else
@@ -71,7 +67,6 @@ function manuallyEnterId()
                 addNewName();
         
             }
-            // addNewName();
         }
         else
         {

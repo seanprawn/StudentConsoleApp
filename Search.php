@@ -1,10 +1,12 @@
 <?php
-
+// include 'Student.php';
 /**
  * This file contains all my methods and algorithms for searching
  * -Search for a specific ID and print out results
  * - Search for existing Student using unique id
  * -Search that returns all students saved
+ * -Search that returns a specific student
+ * 
  */
     // $studentFolders;
 
@@ -39,10 +41,14 @@
                         echo "No Student found\n";
                     }
                 }
+                else
+                    {
+                        echo "No Student folder found\n";
+                    }
             }
         }
         else{
-            echo "No Student found\n";
+            echo "No Student directories found\n";
         }
     }
 
@@ -156,6 +162,10 @@
                         if (is_file($path))
                         {
                           unlink($path);
+                          if(rmdir("students/".$searchFolder."/"))
+                          {
+                            //Removed if empty folder?
+                          }
                           return true;
                         }
                         else 
@@ -178,56 +188,48 @@
 
     function searchAllStudents()
     {
-        // $dirs = null;
         $dirs = getDirectories();
         $allStudents = array();
-        $exclude = array( ".",".."); // Clean up the array by deleting elements not needed.
-        // $searchFolder = substr($id,0,-5);
+        $fileArray = array();
+        $path = "students/";
+        echo "All Students:\n";
         printLables();
+
         if($dirs)
         {
-            foreach($dirs as $folder) //each folder
+            foreach($dirs as $dir) //each folder containing json files
             {
-                // echo "\nFolder: ".$folder."\n";
-                $fileArray = scandir("students/".$folder); // each collection of files in its folder
-
-                if(!in_array($fileArray, $exclude))
+            $fileArray = scandir("students/".$dir); // each collection of files in its folder
+                       
+                if(is_dir($path.$dir))
                 {
-                    for($i=0;$i<count($fileArray);$i++)
-                    { 
-                        if(!preg_match("/^[.]*[0-9]*$/",$fileArray[$i])) //this regex searches for 1 or 2 dots followed by numbers
-                        { 
-                            // echo "i = ".$fileArray[$i]."\n";
-                            $currentPath = "students/".$folder."/".$fileArray[$i];
-                            // echo "currentPath:\n".$currentPath."\n";
-                            if(file_exists($currentPath))
+                    if ($dh = opendir($path.$dir))
+                    {
+                        while (($file = readdir($dh)) !== false) 
+                        {
+                            if(!preg_match("/^[.]*[0-9]*$/",$file)) //this regex excludes 1 or 2 dots, but not dots followed by numbers
                             {
-                                $myStudent = file($currentPath);
-                                // echo"My Student: ".$myStudent;
-                                if($myStudent)
+                                $currentPath = $path.$dir."/".$file;
+                                if(file_exists($currentPath))
                                 {
-                                    // print_r($myStudent);
-                                    $parsedStudent = json_decode($myStudent[0],false);
-                                    // echo "\nParsed Student:\n";
-                                    // print_r($parsedStudent);
-                                    array_push($allStudents, $parsedStudent);
-                                    // foreach($allStudents as $student)
-                                    for($i=0;$i<count($allStudents);$i++)
+                                    $myStudent = file($currentPath);
+                                    if($myStudent)
                                     {
-                                        printStudentDetails($allStudents[$i]);
+                                        $parsedStudent = json_decode($myStudent[0],false); //parse each student to an object
+                                        array_push($allStudents, $parsedStudent); //gets each student and adds it into array
                                     }
                                 }
                             }
                         }
-                        // $files = scandir("students/".$dir);
-                        // if(!in_array($file, $exclude))
-                        // echo "File:\n".$file."\n";
-                        // // print_r($file);
+                        closedir($dh);
                     }
                 }
             }
-            // echo "\nAll students: \n";
-            // print_r($allStudents);
+
+            for($i=0;$i<count($allStudents);$i++)
+            {
+                printStudentDetails($allStudents[$i]);
+            }
         }
     }
 

@@ -2,13 +2,12 @@
 include 'Student.php';
 include 'Add.php';
 include 'Edit.php';
-include 'Delete.php';
 include 'Search.php';
 include 'Util.php';
 
 /**
  * This app is modularised. 
- * This component acts as a controller and makes calls to the other components as neccessary(Depending on user input).
+ * This file acts as a controller and makes calls to the other components as neccessary(Depending on user input).
  */
 
 $shortOpts  = "";
@@ -54,7 +53,7 @@ if(isset($options["action"]))
             $delete = searchIdAndDeleteStudent($searchId);
             if($delete)
             {
-                echo "File Deleted successfully";
+                echo "File Deleted successfully\n";
             }
 
         }else
@@ -110,9 +109,9 @@ else
 -   Search for all students if arg is left blank - Done!
 
 ----BUGS:
----Edit student saving blank records
----Search all produces duplicates
----Delete folders? (non essential but annoying)
+---Edit student saving blank records - Done!
+---Search all produces duplicates - Done!
+---Delete folders? (non essential but annoying!) - Done!
 ---
 */
 ?>

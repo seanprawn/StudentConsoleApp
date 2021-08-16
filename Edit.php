@@ -15,40 +15,41 @@ function editExistingStudent($id)
     if($student)
     {
         $studentId = $student->id;
-        editName();
+        editName($studentId);
     }
 }
 
-function editName()
+function editName($id)
 {
     global $student;
+    $detailsSaved = array();
+    $detailsSaved["id"] = $id;
     $name = $student->name;
-    echo "Enter name [$name]: ";
-    global $inputName;
-    $inputName = fgets(STDIN);
-
-    $inputName = cleanInput($inputName);
-    if(!strlen($inputName) > 0)
-    {
-        if(validateTextInput($inputName))
+        echo "Enter name [$name]: ";
+        global $inputName;
+        $inputName = fgets(STDIN);
+        $inputName = trim($inputName);
+        // $inputName = cleanInput($inputName);
+        if(strlen($inputName) > 0)
         {
-            echo $name."\n";
-            editSurname();
-            
+            if(validateEditTextInput($inputName))
+            {
+                $detailsSaved["name"] = $inputName;
+                editSurname($detailsSaved);
+                
+            }else
+            {
+                echo "Invalid input, please try again.\n";
+                editName($id);
+            }
         }else
         {
-            echo "Invalid input, please try again.\n";
-            editName();
+            $detailsSaved["name"] = $name;
+            editSurname($detailsSaved);
         }
-    }else{
-        // echo $name."\n";
-        $inputName = $name;
-        editSurname();
-    }
-
 }
 
-function editSurname()
+function editSurname($detailsSaved)
 {
     global $student;
     global $inputSurname;
@@ -56,29 +57,28 @@ function editSurname()
     echo "Enter Surname [$surName]: ";
 
     $inputSurname = fgets(STDIN);
-    $inputSurname = cleanInput($inputSurname);
+    $inputSurname = trim($inputSurname);
 
-    if(!strlen($inputSurname) > 0)
+    if(strlen($inputSurname) > 0)
     {
-        if(validateTextInput($inputSurname))
+        if(validateEditTextInput($inputSurname))
         {
-            echo $inputSurname."\n";
-            editAge();
+            $detailsSaved["surName"] = $inputSurname;
+            editAge($detailsSaved);
             
         }else
         {
             echo "Invalid input, please try again.\n";
-            editSurname();
+            editSurname($detailsSaved);
         }
     }else{
-        // echo $name."\n";
-        $inputSurname = $surName;
-        editAge();
+        $detailsSaved["surName"] = $surName;
+        editAge($detailsSaved);
     }
 
 }
 
-function editAge()
+function editAge($detailsSaved)
 {
     global $student;
     global $inputAge;
@@ -88,35 +88,33 @@ function editAge()
 
     $inputAge = fgets(STDIN);
     $inputAge = trim($inputAge);
-    // echo "Age length: ".strlen($inputAge)."\n";
     if(strlen($inputAge) > 0)
     {
         if(is_numeric($inputAge)) // validate age - will a student be older than 100? 
         {
             if($inputAge < 100)
             {
-                echo $inputAge."\n";
-                editCurriculum();
+                $detailsSaved["age"] = $inputAge;
+                editCurriculum($detailsSaved);
             }
             else
             {
                 echo "Please enter a valid age\n";
-                editAge();
+                editAge($detailsSaved);
             }
         }else
         {
             echo "Invalid input, please try again.\n";
-            editAge();
+            editAge($detailsSaved);
         }
     }else
     {
-        $inputAge = $age;
-        echo $inputAge."\n";
-        editCurriculum();
+        $detailsSaved["age"] = $age;
+        editCurriculum($detailsSaved);
     }
 }
 
-function editCurriculum()
+function editCurriculum($detailsSaved)
 {
     global $student;
     global $inputCurriculum;
@@ -124,39 +122,33 @@ function editCurriculum()
     echo "Enter Curriculum [$curriculum]: ";
 
     $inputCurriculum = fgets(STDIN);
-    $inputCurriculum = cleanInput($inputCurriculum);
+    $inputCurriculum = trim($inputCurriculum);
+    // $inputCurriculum = cleanInput($inputCurriculum);
 
-    if(!strlen($inputCurriculum) > 0)
+    if(strlen($inputCurriculum) > 0)
     {
-        if(validateTextInput($inputCurriculum))
+        if(validateEditTextInput($inputCurriculum))
         {
-            echo $inputCurriculum."\n";
-            // editAge();
-            saveEditedStudentDetails();
+            $detailsSaved["curriculum"] = $inputCurriculum;
+            saveEditedStudentDetails($detailsSaved);
             
         }else
         {
             echo "Invalid input, please try again.\n";
-            editCurriculum();
+            editCurriculum($detailsSaved);
         }
     }else{
-        // echo $name."\n";
-        $inputCurriculum = $curriculum;
-        // editAge();
-        saveEditedStudentDetails();
+        $detailsSaved["curriculum"] = $curriculum;
+        saveEditedStudentDetails($detailsSaved);
     }
 }
 
-function saveEditedStudentDetails()
+function saveEditedStudentDetails($detailsSaved)
 {
-    global $studentId;
-    global $inputName;
-    global $inputSurname;
-    global $inputAge;
-    global $inputCurriculum;
-    $editedStudent = new Student($studentId, $inputName, $inputSurname, $inputAge, $inputCurriculum);
-    print_r($editedStudent);
-    // saveStudentChangesToFile($editedStudent);
+    print_r($detailsSaved);
+    $editedStudent = new Student($detailsSaved['id'], $detailsSaved['name'], $detailsSaved['surName'], $detailsSaved['age'], $detailsSaved['curriculum']);
+    // print_r($editedStudent);
+    saveStudentChangesToFile($editedStudent);
 }
 
 function saveStudentChangesToFile($student)

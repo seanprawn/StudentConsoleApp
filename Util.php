@@ -1,4 +1,5 @@
 <?php
+// include 'Student.php';
 /**
  * ---------------------------------------------------------
  * Utility functions for this app can be found in this file
@@ -36,6 +37,19 @@ function validateTextInput($input)
     {
        return false;
     }
+    else if(!strlen($input) > 0) return false;
+    else if(strlen($input) > 20) return false;
+    else 
+    return true;
+}
+
+function validateEditTextInput($input)
+{
+    if (!preg_match("/^[a-zA-Z-' ]*$/",$input))
+    {
+       return false;
+    }
+    // else if(!strlen($input) > 0) return false;
     else if(strlen($input) > 20) return false;
     else 
     return true;
